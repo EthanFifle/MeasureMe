@@ -1,9 +1,11 @@
-from flask import Flask, request
-import os
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 import subprocess
-from werkzeug.utils import secure_filename
+import os
+import json
 
 app = Flask(__name__)
+CORS(app, resources={r"/process*": {"origins": "http://localhost:3000"}})
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(ROOT_DIR, 'data', 'smpl')
@@ -16,18 +18,28 @@ def process_gender():
     gender = request.args.get('gender', '').upper()
 
     if gender not in ['MALE', 'FEMALE', 'NEUTRAL']:
-        return 'Invalid gender', 400
+        return jsonify({'error': 'Invalid gender'}), 400
 
     try:
         run_script_path = os.path.join(ROOT_DIR, 'run.py')
+        # Ensure run.py outputs JSON-formatted string
         result = subprocess.run(['python', run_script_path, gender], check=True, stdout=subprocess.PIPE, text=True)
         output = result.stdout
-        print("run.py executed successfully with gender:", gender)
+
+        # Find the first JSON object
+        json_start = output.find('{')
+        json_end = output.rfind('}') + 1
+        json_str = output[json_start:json_end]
+        measurements = json.loads(json_str)
+
     except subprocess.CalledProcessError as e:
         print(f"Failed to execute run.py: {e}")
-        return f"Error executing script: {e}", 500
+        return jsonify({'error': f"Error executing script: {e}"}), 500
+    except json.JSONDecodeError as e:
+        print(f"Failed to parse JSON output: {e}")
+        return jsonify({'error': f"Error parsing output: {e}"}), 500
 
-    return output, 200
+    return jsonify({'Measurements': measurements}), 200
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
