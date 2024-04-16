@@ -12,7 +12,6 @@ RUN pip install --no-cache-dir -r requirements.txt \
     && pip install torch==1.6.0+cpu torchvision==0.7.0+cpu -f https://download.pytorch.org/whl/torch_stable.html \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
-        # Add only necessary packages here, e.g., libgomp1 for PyTorch
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
 

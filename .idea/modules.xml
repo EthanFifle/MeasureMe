@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/SMPL-Anthropometry.iml" filepath="$PROJECT_DIR$/.idea/SMPL-Anthropometry.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/MeasureMe.iml" filepath="$PROJECT_DIR$/.idea/MeasureMe.iml" />
     </modules>
   </component>
 </project>
