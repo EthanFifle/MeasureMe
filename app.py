@@ -6,7 +6,7 @@ import json
 app = Flask(__name__)
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-@app.route('/upload', methods=['POST'])
+@app.route('/betas', methods=['POST'])
 def upload_info():
     if 'gender' not in request.form or 'betas' not in request.form:
         return 'Gender or betas parameter missing in the request', 400
@@ -34,4 +34,4 @@ def upload_info():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=8080)
